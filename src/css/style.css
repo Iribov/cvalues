@@ -1,0 +1,213 @@
+/*apply the iribov font*/
+@font-face {
+    font-family: "Marist";
+    src: url("/static/fonts/Marist/ABCMarist-Bold.woff2") format("woff2 supports variations"),
+        url("/static/fonts/Marist/ABCMarist-Bold.woff2") format("woff2-variations");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Marist";
+    src: url("/static/fonts/Marist/ABCMarist-Book.woff2") format("woff2 supports variations"),
+        url("/static/fonts/Marist/ABCMarist-Book.woff2") format("woff2-variations");
+}
+
+@font-face {
+    font-family: "Marist", "Times new Roman";
+    src: url("/static/fonts/Marist/ABCMarist-BookItalic.woff2") format("woff2 supports variations"),
+        url("/static/fonts/Marist/ABCMarist-BookItalic.woff2") format("woff2-variations");
+    font-style: italic;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --color-primary: #ff8200;
+    --color-background: #ffffff;
+    --color-text: #1E1E1E;
+    --color-gray: #91918c;
+
+    --color-secundary-1-light: #dcf082;
+    --color-secundary-1-medium: #becd32;
+    --color-secundary-1-dark: #506e00;
+
+    --color-secundary-2-light: #ffc8d2;
+    --color-secundary-2-medium: #ff738c;
+    --color-secundary-2-dark: #b40055;
+
+    --color-secundary-3-light: #96dcfa;
+    --color-secundary-3-medium: #0096c8;
+    --color-secundary-3-dark: #005f64;
+
+    --color-secundary-4-light: #dcd2ff;
+    --color-secundary-4-medium: #c896ff;
+    --color-secundary-4-dark: #823cb4;
+
+    font-family: "Marist", "Times New Roman";
+}
+
+html, body {
+    height: 100%;
+    min-width: 320px;
+}
+
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+nav{
+    height: 40px;
+    padding: 3px;
+}
+
+nav ul{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-content: center;
+}
+
+li{
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+}
+
+.hero{
+    height: 10rem;
+    background-color: var(--color-primary);
+    text-align: center;
+}
+
+.hero h1{
+    margin: 2.5rem;
+    font-size: 2.5rem;
+    color: var(--color-background);
+}
+
+/*put main content in the center of the screen*/
+.content {
+    margin-top: 1rem;
+    justify-items: center;
+    flex-grow: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    color: var(--color-primary);
+}
+
+/*make labels be on top of input*/
+label,
+input {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    padding-top: 0.75rem;
+}
+
+/* table styling */
+table {
+    border-collapse: collapse;
+    margin: 2rem 0;
+    border: 1px solid var(--color-text);
+    font-size: 0.75rem;
+}
+
+th {
+    background-color: var(--color-primary);
+    height: 2rem;
+    text-align: left;
+    padding: 1rem 1rem 1rem 0.5rem;
+}
+
+td {
+    border: 1px solid var(--color-text);
+    padding: 0.5rem;
+}
+
+tr:nth-child(odd) {
+    background-color: var(--color-secundary-3-light);
+}
+
+button {
+    padding: 0.25rem 1rem;
+    border-radius: 5px;
+    border: 0px;
+    margin: 1rem 0;
+
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+button:hover{
+    opacity: 80%;
+    cursor: pointer;
+}
+
+footer {
+    width: 100%;
+    bottom: 0;
+    background-color: var(--color-gray);
+    padding: 30px;
+}
+
+.footer__columns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    max-width: 1200px;
+}
+
+.footer__column{
+    padding: 0 0.5rem;
+    flex-grow: 1;
+    margin-bottom: 3rem;
+}
+
+.footer__title {
+    color: var(--color-primary);
+    font-weight: bold;
+    padding-bottom: 1rem;
+}
+
+.footer__item {
+    list-style: none;
+}
+
+.footer__item a {
+    color: var(--color-text);
+    opacity: 50%;
+}
+
+.footer__item a:hover {
+    opacity: 100%;
+}
+
+.footer__bottom {
+    justify-content: center;
+    text-align: center;
+}
+
+.footer__copyright{
+    margin-top: 0.5rem;
+}
