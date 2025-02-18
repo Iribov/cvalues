@@ -10,51 +10,39 @@
 </head>
 
 <body>
-    <script src="/src/scripts/script.js"></script>
     <div class="container">
         <nav>
             <ul>
                 <li>
-                    <a href="index.html">
-                        <img src="static/img/Iribov_logo_wo_text.svg" alt="" height="24px">
+                    <a href="#">
+                        <img src="/static/img/Iribov_logo_wo_text.svg" alt="" height="24px">
                     </a>
                 </li>
 
                 <li>
-                    <a href="https://iribov.com/">
-                        <img src="static/img/logo.svg" alt="" height="32px">
+                    <a href="https://iribov.com/" target="blank">
+                        <img src="/static/img/logo.svg" alt="" height="32px">
                     </a>
                 </li>
 
             </ul>
         </nav>
-
-        <title>C_Values</title>
         <section class="hero">
             <h1>Know Better<br>Grow Better</h1>
         </section>
         <section class="content">
+            <h1>C Values</h1>
+            <div class="table-wrapper">
+            <table id="searchResultsTable">
+                <thead>
+                </thead>
+                <tbody id="searchResultsTable__Body">
+                </tbody>
+            </table>
+        </div>
 
-            <div id="search_box_window">
-                <h2>Search C Values</h2>
-                <div class="InputText">
-                    <label for="FamilyNameInput">Family</label>
-                    <input class="searchBoxInput" id="FamilyNameInput" type="text">
-                </div>
-                <div class="InputText">
-                    <label for="CropNameInput">Crop</label>
-                    <input class="searchBoxInput" id="CropNameInput" type="text">
-                </div>
-                <div class="InputText">
-                    <label for="CultivarNameInput">Cultivar</label>
-                    <input class="searchBoxInput" id="CultivarNameInput" type="text">
-                </div>
-                <div class="InputText">
-                    <label for="PlantNameInput">Plant</label>
-                    <input class="searchBoxInput" id="PlantNameInput" type="text">
-                </div>
-                <button id="SearchButton" onclick="Search()" type="button">Search</button>
-            </div>
+        <button id="ShowAllButton">Show All</button>
+
         </section>
 
         <footer>
@@ -63,7 +51,7 @@
                     <div class="footer__title">Socials</div>
                     <ul class="footer__items">
                         <li class="footer__item">
-                            <a href="https://nl.linkedin.com/company/iribov">LinkedIn</a>
+                            <a href="https://nl.linkedin.com/company/iribov" target="blank">LinkedIn</a>
                         </li>
                     </ul>
                 </div>
@@ -71,29 +59,29 @@
                     <div class="footer__title">More</div>
                     <ul class="footer__items">
                         <li class="footer__item">
-                            <a href="https://iribov.com/">Iribov</a>
+                            <a href="https://iribov.com/" target="blank">Iribov</a>
                         </li>
                     </ul>
-                </div>
-                <div class="footer__column">
-                    <div class="footer__title">More</div>
                     <ul class="footer__items">
                         <li class="footer__item">
-                            <a href="https://iribov.com/">Iribov</a>
+                            <a href="https://www.iribovinnovations.com/" target="blank">Iribov Innovations</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="footer__bottom">
                 <div class="footer__logo">
-                    <a href="https://iribov.com/">
-                        <img src="static/img/logo.svg" alt="" height="30px">
-                    </a>
+                    <a href="https://iribov.com/" target="blank">
+                    <img src="/static/img/logo.svg" alt="" height="30px">
+                </a>
                 </div>
                 <div class="footer__copyright">Copyright © 2025 Iribov</div>
             </div>
         </footer>
+
     </div>
+    <!-- Link to the external JavaScript file -->
+    <script src="/src/scripts/script.js"></script>
 </body>
 
 </html>

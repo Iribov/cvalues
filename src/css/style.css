@@ -52,7 +52,8 @@
     font-family: "Marist", "Times New Roman";
 }
 
-html, body {
+html,
+body {
     height: 100%;
     min-width: 320px;
 }
@@ -65,12 +66,12 @@ html, body {
     height: 100%;
 }
 
-nav{
+nav {
     height: 40px;
     padding: 3px;
 }
 
-nav ul{
+nav ul {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -78,21 +79,21 @@ nav ul{
     align-content: center;
 }
 
-li{
+li {
     list-style: none;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-.hero{
+.hero {
     height: 10rem;
     background-color: var(--color-primary);
     text-align: center;
 }
 
-.hero h1{
+.hero h1 {
     margin: 2.5rem;
     font-size: 2.5rem;
     color: var(--color-background);
@@ -125,19 +126,45 @@ label {
 }
 
 /* table styling */
+.table-wrapper {
+    max-height: 80vh;
+    width: 80vw;
+    overflow: auto;
+}
+
 table {
     border-collapse: collapse;
     margin: 2rem 0;
-    border: 1px solid var(--color-text);
+    /*border: 1px solid var(--color-text);*/
     font-size: 0.75rem;
 }
 
-th {
+thead {
+    position: sticky;
+    top: 0;
+}
+
+.searchText {
+    background-color: var(--color-background);
+    height: 0.5rem;
+}
+
+.searchTextBox {
+    width: 100%;
+}
+
+.header {
+    border: 1px solid var(--color-text);
+}
+
+.headers {
     background-color: var(--color-primary);
     height: 2rem;
     text-align: left;
     padding: 1rem 1rem 1rem 0.5rem;
 }
+
+
 
 td {
     border: 1px solid var(--color-text);
@@ -158,7 +185,7 @@ button {
     color: var(--color-background);
 }
 
-button:hover{
+button:hover {
     opacity: 80%;
     cursor: pointer;
 }
@@ -174,14 +201,17 @@ footer {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    justify-self: center;
     flex-wrap: wrap;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 800px;
 }
 
-.footer__column{
+.footer__column {
     padding: 0 0.5rem;
-    flex-grow: 1;
+    /* flex-grow: 1; */
     margin-bottom: 3rem;
+    min-width: 150px;
 }
 
 .footer__title {
@@ -192,10 +222,11 @@ footer {
 
 .footer__item {
     list-style: none;
+    margin-bottom: 0.75rem;
 }
 
 .footer__item a {
-    color: var(--color-text);
+    color: var(--color-background);
     opacity: 50%;
 }
 
@@ -208,6 +239,8 @@ footer {
     text-align: center;
 }
 
-.footer__copyright{
+.footer__copyright {
     margin-top: 0.5rem;
+    color: var(--color-background);
+    opacity: 50%;
 }
