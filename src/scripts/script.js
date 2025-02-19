@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    loadHeadersIntoTable("/static/data/cvalues.csv", document.getElementById('searchResultsTable'));
+    loadHeadersIntoTable("/static/data/cvalues.zip", document.getElementById('searchResultsTable'));
 });
 
 async function loadHeadersIntoTable(url, table) {
-    let csvString = await fetchData(url);
+    let csvString = await fetchAndUnzipCSV(url);
     let data = parseCSV(csvString);
     const headers = data[0];
     const values = data.slice(1);
@@ -124,3 +124,40 @@ function debounce(func, delay) {
         timer = setTimeout(() => func.apply(this, args), delay);
     };
 }
+
+async function fetchAndUnzipCSV(url) {
+    try {
+      const response = await fetch(url);
+      const buffer = await response.arrayBuffer();
+      return await unzipCSVFromString(buffer);
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }
+  
+
+async function unzipCSVFromString(zipData) {
+    try {
+      // Convert the ArrayBuffer to a Uint8Array
+      const zipArray = new Uint8Array(zipData);
+      
+      // Load the zip file
+      const zip = await JSZip.loadAsync(zipArray);
+  
+      // Find the first CSV file in the archive
+      const csvFileName = Object.keys(zip.files).find(name => name.endsWith('.csv'));
+      if (!csvFileName) {
+        throw new Error('No CSV file found in the ZIP archive.');
+      }
+  
+      // Extract the CSV file content as a string
+      const csvContent = await zip.files[csvFileName].async('text');
+      return csvContent;
+  
+    } catch (error) {
+      console.error('Error unzipping CSV:', error);
+      throw error;
+    }
+  }
+  
