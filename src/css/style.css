@@ -30,7 +30,7 @@
 *::before,
 *::after {
     -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
@@ -75,14 +75,14 @@ body {
     display: flex;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
     height: 100%;
 }
 
 nav {
-    height: 40px;
-    padding: 3px;
+    height: 5rem;
+    padding: 1.5rem;
 }
 
 nav ul {
@@ -91,15 +91,15 @@ nav ul {
     display: flex;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     -ms-flex-wrap: nowrap;
-        flex-wrap: nowrap;
+    flex-wrap: nowrap;
     -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
     -ms-flex-line-pack: center;
-        align-content: center;
+    align-content: center;
 }
 
 li {
@@ -111,15 +111,22 @@ a {
 }
 
 .hero {
-    height: 10rem;
+    height: 15rem;
     background-color: var(--color-primary);
     text-align: center;
+    background-image: url("../../static/img/Caleidoscoop_1600x1600_crop_center-center_100_none_ns15a1a5571ed2bdd0d5d91c6189ba1434.jpeg");
 }
 
 .hero h1 {
-    margin: 2.5rem;
+    margin: 4.5rem;
+    padding: 0.5rem;
     font-size: 2.5rem;
+    width: fit-content;
+    justify-self: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10%;
     color: var(--color-background);
+    font-weight: 300;
 }
 
 /*put main content in the center of the screen*/
@@ -127,8 +134,8 @@ a {
     margin-top: 1rem;
     text-align: center;
     -webkit-box-flex: 1;
-        -ms-flex-positive: 1;
-            flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
 }
 
 h1,
@@ -139,6 +146,15 @@ h5 {
     color: var(--color-primary);
 }
 
+#table_title{
+    color: var(--color-gray);
+    text-align: left;
+    margin: auto;
+    width: 90vw;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
 /*make labels be on top of input*/
 label,
 input {
@@ -147,11 +163,11 @@ input {
     display: flex;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
-input{
+input {
     text-indent: 4px;
 }
 
@@ -177,7 +193,7 @@ table {
     /* margin: 2rem 0; */
     /* border: 1px solid var(--color-text); */
     font-size: 0.75rem;
-    table-layout:fixed;
+    table-layout: fixed;
 }
 
 thead {
@@ -209,20 +225,22 @@ thead {
 .row {
     height: 32px;
     white-space: nowrap;
-    overflow: hidden; /* Hide overflowing content */
-    text-overflow: ellipsis; /* Add "..." when text overflows */
+    overflow: hidden;
+    /* Hide overflowing content */
+    text-overflow: ellipsis;
+    /* Add "..." when text overflows */
 }
 
- .cell{
+.cell {
     text-indent: 8px;
- }
+}
 
 .row:hover {
     background-color: var(--color-primary-faded) !important;
 }
 
 .row:nth-child(odd) {
-    background-color: var(--color-secundary-3-light);
+    background-color: #e3e3e3;
 }
 
 button {
@@ -243,7 +261,7 @@ button:hover {
 footer {
     width: 100%;
     bottom: 0;
-    background-color: var(--color-gray);
+    background-color: var(--color-background);
     padding: 30px;
 }
 
@@ -253,15 +271,15 @@ footer {
     display: flex;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
-        -ms-flex-direction: row;
-            flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     -webkit-box-pack: space-evenly;
-        -ms-flex-pack: space-evenly;
-            justify-content: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
     -ms-grid-column-align: center;
-        justify-self: center;
+    justify-self: center;
     -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     width: 100%;
     max-width: 800px;
     margin-left: auto;
@@ -287,7 +305,7 @@ footer {
 }
 
 .footer__item a {
-    color: var(--color-background);
+    color: var(--color-text);
     opacity: 50%;
 }
 
@@ -297,13 +315,13 @@ footer {
 
 .footer__bottom {
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     text-align: center;
 }
 
 .footer__copyright {
     margin-top: 0.5rem;
-    color: var(--color-background);
+    color: var(--color-text);
     opacity: 50%;
 }
