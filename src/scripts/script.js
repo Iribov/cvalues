@@ -1,3 +1,17 @@
+function updateTableWrapperHeight() {
+    const tableWrapper = document.querySelector(".table-wrapper");
+    if (tableWrapper) {
+        const offsetTop = tableWrapper.getBoundingClientRect().top + window.scrollY;
+        document.documentElement.style.setProperty('--table-wrapper-top-offset', `${offsetTop}px`);
+    }
+}
+
+// Run on page load and resize
+document.addEventListener("DOMContentLoaded", updateTableWrapperHeight);
+window.addEventListener("resize", updateTableWrapperHeight);
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     loadHeadersIntoTable("/static/data/cvalues.zip", document.getElementById('searchResultsTable'));
 });
@@ -93,8 +107,10 @@ function Insert_Table_Rows(table, data) {
 
     data.forEach(row => {
         const rowElement = document.createElement("tr");
+        rowElement.className="row"
         row.forEach(cellText => {
             const cellElement = document.createElement("td");
+            cellElement.className="cell"
             cellElement.textContent = cellText;
             rowElement.appendChild(cellElement);
         });
