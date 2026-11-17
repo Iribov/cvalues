@@ -1,179 +1,107 @@
-function updateTableWrapperHeight() {
-    const tableWrapper = document.querySelector(".table-wrapper");
-    if (tableWrapper) {
-        const offsetTop = tableWrapper.getBoundingClientRect().top + window.scrollY;
-        document.documentElement.style.setProperty('--table-wrapper-top-offset', `${offsetTop}px`);
-    }
-}
+(() => {
+  const DATA_URL = "./static/data/cvalues.json";
+  const state = { data: [], filtered: [], visible: 12, query: "", family: "", method: "", sort: "relevance" };
+  const $ = (selector) => document.querySelector(selector);
+  const grid = $("#results-grid");
+  const count = $("#results-count");
+  const empty = $("#empty-state");
+  const loadMore = $("#load-more");
+  const normalize = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().trim();
+  const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  const plantName = (record) => [record.genus, record.species].filter(Boolean).join(" ") || "Unidentified plant";
+  const formatValue = (value) => Number(value).toLocaleString(undefined, { maximumFractionDigits: 4 });
 
-// Run on page load and resize
-document.addEventListener("DOMContentLoaded", updateTableWrapperHeight);
-window.addEventListener("resize", updateTableWrapperHeight);
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadHeadersIntoTable("/static/data/cvalues.zip", document.getElementById('searchResultsTable'));
-});
-
-async function loadHeadersIntoTable(url, table) {
-    let csvString = await fetchAndUnzipCSV(url);
-    let data = parseCSV(csvString);
-    const headers = data[0];
-    const values = data.slice(1);
-
-    sessionStorage.headers = JSON.stringify(headers);
-    sessionStorage.data = JSON.stringify(values);
-    sessionStorage.filters = JSON.stringify({});
-
-    Insert_Table_Header(table, headers);
-}
-
-function initializeSearchBoxEvent(table) {
-    const elements = document.getElementsByClassName("searchTextBox");
-    const myFunction = async function () {
-        let filters = JSON.parse(sessionStorage.filters);
-        let value = this.value.trim();
-
-        if (value === "") {
-            delete filters[this.id];
-        } else {
-            filters[this.id] = value;
-        }
-
-        sessionStorage.filters = JSON.stringify(filters);
-        let filteredData = await searchTable(filters, JSON.parse(sessionStorage.data));
-        Insert_Table_Rows(table, filteredData);
-    };
-
-    for (let element of elements) {
-        element.addEventListener('keyup', debounce(myFunction, 500), false);
-    }
-
-    // Show all button
-    const showAllButton = document.getElementById('ShowAllButton');
-    showAllButton.addEventListener('click', () => {
-        Insert_Table_Rows(table, JSON.parse(sessionStorage.data));
-    });
-}
-
-async function fetchData(url) {
-    try {
-        let fetchData = await fetch(url);
-        return await fetchData.text();
-    } catch (error) {
-        console.error(`ERROR: ${error}`);
-        return "";
-    }
-}
-
-function parseCSV(csvString) {
-    const rows = csvString.trim().split('\n');
-    return rows.map(row => row.split(';'));
-}
-
-function Insert_Table_Header(table, headers) {
-    const tableHeader = table.querySelector("thead");
-    tableHeader.innerHTML = "";
-
-    const searchHeaderRow = document.createElement("tr");
-    const headerTextRow = document.createElement("tr");
-
-    headers.forEach((headerText, index) => {
-        const searchHeaderElement = document.createElement("th");
-        const searchElement = document.createElement("input");
-        searchElement.id = index;
-        searchElement.type = "text";
-        searchElement.className = "searchTextBox";
-        searchHeaderElement.appendChild(searchElement);
-        searchHeaderRow.appendChild(searchHeaderElement);
-
-        const headerElement = document.createElement("th");
-        headerElement.textContent = headerText;
-        headerElement.className = "headers";
-        headerTextRow.appendChild(headerElement);
-    });
-
-    tableHeader.appendChild(searchHeaderRow);
-    tableHeader.appendChild(headerTextRow);
-    initializeSearchBoxEvent(table);
-}
-
-function Insert_Table_Rows(table, data) {
-    const tableBody = table.querySelector("tbody");
-    tableBody.innerHTML = "";
-
-    const fragment = document.createDocumentFragment();
-
-    data.forEach(row => {
-        const rowElement = document.createElement("tr");
-        rowElement.className="row"
-        row.forEach(cellText => {
-            const cellElement = document.createElement("td");
-            cellElement.className="cell"
-            cellElement.textContent = cellText;
-            rowElement.appendChild(cellElement);
-        });
-        fragment.appendChild(rowElement);
-    });
-
-    tableBody.appendChild(fragment);
-}
-
-async function searchTable(filters, data) {
-    if (Object.keys(filters).length === 0) {
-        return data;
-    }
-
-    return data.filter(row => {
-        return Object.entries(filters).every(([key, value]) => {
-            let cellValue = row[Number(key)].toLowerCase();
-            return cellValue.includes(value.toLowerCase());
-        });
-    });
-}
-
-function debounce(func, delay) {
-    let timer;
-    return function (...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => func.apply(this, args), delay);
-    };
-}
-
-async function fetchAndUnzipCSV(url) {
-    try {
-      const response = await fetch(url);
-      const buffer = await response.arrayBuffer();
-      return await unzipCSVFromString(buffer);
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
+  async function loadRecords() {
+    const response = await fetch(DATA_URL);
+    if (!response.ok) throw new Error(`Data request failed (${response.status})`);
+    return response.json();
   }
-  
 
-async function unzipCSVFromString(zipData) {
-    try {
-      // Convert the ArrayBuffer to a Uint8Array
-      const zipArray = new Uint8Array(zipData);
-      
-      // Load the zip file
-      const zip = await JSZip.loadAsync(zipArray);
-  
-      // Find the first CSV file in the archive
-      const csvFileName = Object.keys(zip.files).find(name => name.endsWith('.csv'));
-      if (!csvFileName) {
-        throw new Error('No CSV file found in the ZIP archive.');
-      }
-  
-      // Extract the CSV file content as a string
-      const csvContent = await zip.files[csvFileName].async('text');
-      return csvContent;
-  
-    } catch (error) {
-      console.error('Error unzipping CSV:', error);
-      throw error;
-    }
+  function fillSelect(selector, values, label) {
+    const select = $(selector);
+    [...new Set(values.filter(Boolean))].sort((a,b) => a.localeCompare(b)).forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.append(option);
+    });
   }
-  
+
+  function card(record) {
+    const name = plantName(record);
+    const nameHtml = record.genus ? `<em>${esc(record.genus)}</em>${record.species ? ` ${esc(record.species)}` : ""}` : esc(name);
+    const details = [];
+    if (record.chromosomes) details.push(`<span class="detail-chip"><b>Chromosomes</b> ${esc(record.chromosomes)}</span>`);
+    if (record.ploidy) details.push(`<span class="detail-chip"><b>Ploidy</b> ${esc(record.ploidy)}</span>`);
+    if (record.method) details.push(`<span class="detail-chip"><b>Method</b> ${esc(record.method)}</span>`);
+    if (record.voucher) details.push(`<span class="detail-chip"><b>Voucher</b> ${esc(record.voucher)}</span>`);
+    const cultivar = record.cultivar ? `<div class="cultivar"><strong>Cultivar</strong> · ${esc(record.cultivar)}</div>` : "";
+    const authority = record.authority ? `<div class="authority">${esc(record.authority)}</div>` : "";
+    const reference = record.reference ? `<div class="card-reference"><strong>Reference</strong> · ${esc(record.reference)}</div>` : "";
+    return `<article class="result-card"><div class="card-top"><div class="plant-name"><span class="family-tag">${esc(record.family || "Plant family not listed")}</span><h3>${nameHtml}</h3>${authority}</div><div class="cvalue"><strong>${formatValue(record.value)}</strong><span>2C · pg</span></div></div>${cultivar}${details.length ? `<div class="card-details">${details.join("")}</div>` : ""}${reference}</article>`;
+  }
+
+  function applyFilters() {
+    const query = normalize(state.query);
+    state.filtered = state.data.filter((record) => {
+      if (state.family && record.family !== state.family) return false;
+      if (state.method && record.method !== state.method) return false;
+      if (!query) return true;
+      return normalize([record.family, record.genus, record.species, record.authority, record.cultivar, record.method, record.reference, record.chromosomes, record.ploidy].join(" ")).includes(query);
+    });
+    if (state.sort === "name") state.filtered.sort((a,b) => plantName(a).localeCompare(plantName(b)));
+    if (state.sort === "value-asc") state.filtered.sort((a,b) => a.value - b.value);
+    if (state.sort === "value-desc") state.filtered.sort((a,b) => b.value - a.value);
+    state.visible = Number($("#page-size").value);
+    render();
+  }
+
+  function render() {
+    const results = state.filtered.slice(0, state.visible);
+    grid.innerHTML = results.map(card).join("");
+    grid.hidden = results.length === 0;
+    empty.hidden = results.length !== 0;
+    count.textContent = `${state.filtered.length.toLocaleString()} ${state.filtered.length === 1 ? "result" : "results"}`;
+    loadMore.hidden = state.visible >= state.filtered.length;
+    grid.setAttribute("aria-busy", "false");
+  }
+
+  $("#search-form").addEventListener("submit", (event) => { event.preventDefault(); state.query = $("#query").value; applyFilters(); });
+  $("#query").addEventListener("input", () => { state.query = $("#query").value; applyFilters(); });
+  $("#family-filter").addEventListener("change", (event) => { state.family = event.target.value; applyFilters(); });
+  $("#method-filter").addEventListener("change", (event) => { state.method = event.target.value; applyFilters(); });
+  $("#sort-order").addEventListener("change", (event) => { state.sort = event.target.value; applyFilters(); });
+  $("#page-size").addEventListener("change", applyFilters);
+  loadMore.addEventListener("click", () => { state.visible += Number($("#page-size").value); render(); });
+  const reset = () => {
+    state.query = ""; state.family = ""; state.method = ""; state.sort = "relevance";
+    $("#query").value = ""; $("#family-filter").value = ""; $("#method-filter").value = ""; $("#sort-order").value = "relevance";
+    applyFilters(); $("#query").focus();
+  };
+  $("#reset-filters").addEventListener("click", reset);
+  $("#empty-reset").addEventListener("click", reset);
+
+  const guide = $("#guide-dialog");
+  $("#guide-trigger").addEventListener("click", () => guide.showModal());
+  $("#guide-close").addEventListener("click", () => guide.close());
+  guide.addEventListener("click", (event) => {
+    if (event.target === guide) guide.close();
+  });
+
+  loadRecords().then((data) => {
+    state.data = data;
+    state.filtered = data;
+    fillSelect("#family-filter", data.map((row) => row.family), "All families");
+    fillSelect("#method-filter", data.map((row) => row.method), "All methods");
+    applyFilters();
+  }).catch((error) => {
+    console.error("Could not load the C-value collection:", error);
+    grid.hidden = true;
+    empty.hidden = false;
+    empty.innerHTML = "<div class=\"empty-icon\" aria-hidden=\"true\">!</div><h3>The collection couldn’t load</h3><p>Please refresh the page in a moment. If the problem continues, contact the Iribov team.</p><a class=\"text-link\" href=\"https://iribov.com/contact/\">Contact Iribov <span aria-hidden=\"true\">↗</span></a>";
+    count.textContent = "Collection unavailable";
+    grid.setAttribute("aria-busy", "false");
+  });
+})();
+
+
